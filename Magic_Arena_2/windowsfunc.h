@@ -26,23 +26,24 @@ void InitMapWindow(WINDOW * mapWin, int height, int width)
 //Добавляя новые пары не забудь, что дефайны идут по возрастанию с еденицыы
 void InitColorPairs()
 {
-	init_pair(ZOMBIE_COLOR, 	4, COLOR_BLACK); 
-	init_pair(CORPSE_COLOR, 	6, COLOR_BLACK);
-	init_pair(GHOUL_COLOR, 		6, COLOR_BLACK);
-	init_pair(SKELETON_COLOR, 	15, COLOR_BLACK);
-	init_pair(DRAUGR_COLOR, 	8, COLOR_BLACK);
-	init_pair(REVENANT_COLOR, 	3, COLOR_BLACK);
-	init_pair(BURNING_COLOR, 	4, 12);
-	init_pair(FIRE_SPELL_COLOR, 4, 14);
-	init_pair(ICE_SPELL_COLOR, 	11, 3);
-	init_pair(HEAL_SPELL_COLOR, 2, 10);
-	init_pair(TELE_SPELL_COLOR, 3, COLOR_BLACK);
-	init_pair(PLAYER_COLOR, 	5, COLOR_BLACK);
-	init_pair(DOOMBRINGER_COLOR,0, 7);
-	init_pair(SIMPLE_TEXT_COLOR,7, COLOR_BLACK); 
-	init_pair(GROUND_COLOR,		8, COLOR_BLACK);
-	init_pair(WALL_COLOR,		12, 14);
-	init_pair(MGC_MISSLE_COLOR,	13, COLOR_BLACK);//последний дефайн имеет номер 17
+	init_pair(ZOMBIE_COLOR, 	CLR_RED, 		CLR_BLACK); 
+	init_pair(CORPSE_COLOR, 	CLR_YELLOW, 	CLR_BLACK);
+	init_pair(GHOUL_COLOR, 		CLR_YELLOW, 	CLR_BLACK);
+	init_pair(SKELETON_COLOR, 	CLR_LGHTWHITE, 	CLR_BLACK);
+	init_pair(DRAUGR_COLOR, 	CLR_GRAY, 		CLR_BLACK);
+	init_pair(REVENANT_COLOR, 	CLR_CYAN, 		CLR_BLACK);
+	init_pair(BURNING_COLOR, 	CLR_RED, 		CLR_LGHTRED	);
+	init_pair(FIRE_SPELL_COLOR, CLR_RED, 		CLR_LGHTRED);
+	init_pair(ICE_SPELL_COLOR, 	CLR_LGHTCYAN, 	CLR_CYAN);
+	init_pair(HEAL_SPELL_COLOR, CLR_GREEN, 		CLR_LGHTGREEN);
+	init_pair(TELE_SPELL_COLOR, CLR_CYAN, 		CLR_BLACK);
+	init_pair(PLAYER_COLOR, 	CLR_VIOLET, 	CLR_BLACK);
+	init_pair(DOOMBRINGER_COLOR,CLR_BLACK, 		CLR_WHITE);
+	init_pair(SIMPLE_TEXT_COLOR,CLR_WHITE, 		CLR_BLACK); 
+	init_pair(GROUND_COLOR,		CLR_GRAY, 		CLR_BLACK);
+	init_pair(WALL_COLOR,		CLR_LGHTRED, 	CLR_LGHTYELLOW);
+	init_pair(MGC_MISSLE_COLOR,	CLR_LGHTVIOLET, CLR_BLACK);
+	init_pair(RED_TEXT_COLOR,	CLR_RED	, 		CLR_BLACK);//последний дефайн имеет номер 18
 }
 
 int IsNearWall(object_t map[][MAP_WIDTH], int y, int x)//Не забудь, что ожешь выйти за границы массива, ИСПАРВЬ
@@ -62,14 +63,15 @@ void GenerateDungeon(object_t map[][MAP_WIDTH], int numOfWalls)
 	 	{
 	 		for(j = 0; j < MAP_WIDTH; j++)
 	 		{
-	 			 if(rand() % 20 == 6)
-	 			 {
-	 			 	map[i][j].symbol = WALL_SYMBOL;
+	 			if(rand() % 20 == 6)
+	 			{
+	 				map[i][j].symbol = WALL_SYMBOL;
 	 			 	map[i][j].color  = WALL_COLOR;
-	 			 }
-	 					
+	 			 	map[i][j].isPassable  = IMPASSABLE;
+	 			 	map[i][j].desc[0] = '\0';
+	 			 	strcpy(map[i][j].desc, "Huge Wall");
+	 			}		
 	 		}
-	 		
 	 	}
 	//  int density, x, y, dirX, dirY, j, i;
 	// 	density = 5 + rand() % 5;
@@ -106,14 +108,15 @@ void GenerateDungeon(object_t map[][MAP_WIDTH], int numOfWalls)
 void InitMap(object_t map[][MAP_WIDTH])
 {
 	int i, j;
-	map[i][j].desc[0] = '\0';
 	for (i = 0; i < MAP_HEIGHT; i++)
 	{
 		for (j = 0; j < MAP_WIDTH; j++)
 		{
 				map[i][j].symbol = GROUND_SYMBOL;
-				Copy(map[i][j].desc, "Just ground");
+				map[i][j].isPassable  = PASSABLE;
 				map[i][j].color  = GROUND_COLOR;
+				map[i][j].desc[0] = '\0';
+				strcpy(map[i][j].desc, "Just ground");
 		}
 	}
 }
@@ -144,7 +147,7 @@ void PrintMap(WINDOW * mapWin, object_t map[][MAP_WIDTH], camera_t *cam, int pla
 //-----------------------------Log functions----------------------------------
 void InitLogWindow(WINDOW * logWin)
 {
-	wborder(logWin, '.', '.', ACS_HLINE, ACS_HLINE, '/', 92, 92, '/');		
+	wborder(logWin, ' ',' ', ACS_HLINE, ' ', ACS_HLINE, ACS_HLINE, ' ', ' ');		
 	wrefresh(logWin);
 }
 
@@ -162,7 +165,7 @@ logString_t *CreateString(char *stringToPrint) 	// Элементы лога - �
 	logString_t *newString;
 	newString = (logString_t*)malloc(sizeof(logString_t));
 	newString -> logString[0] = '\0';
-	Copy(newString -> logString, stringToPrint);
+	strcat(newString -> logString, stringToPrint);
 	newString -> next = NULL;
 	newString -> prev = NULL;
 	return (logString_t*)newString;
@@ -193,12 +196,12 @@ void PutInLog(log_t *log, char *stringToPrint) 	// Работает как ст�
 void PrintLog(WINDOW *logWin, log_t *log)
 {
 	int i;
-	char stringToPrint[LOG_WIN_WIDTH - 2];		//-2 что бы не наезжало на рамку по-горизонтали
 	logString_t *logString;
 	logString = (logString_t*)(log -> tail);
 	for (i = 0; i < LOG_WIN_HEIGHT - 2; i++)	//-2 что бы не наезжало на рамку по-вертикали
 	{
-			mvwprintw(logWin, i + 1, 1, "%s", logString -> logString); //"i + 1, 1"-Что бы печать не наезжала на рамку
+			mvwprintw(logWin, i + 1, 0, "\n");	//Что бы очистить строку в окне, на которой будем печатать новую строку
+			mvwprintw(logWin, i + 1, 0, "%s", logString -> logString); //"i + 1"-Что бы печать не наезжала на рамку
 			if(logString -> prev != NULL)
 				logString = logString -> prev;
 			else
@@ -210,7 +213,7 @@ void PrintLog(WINDOW *logWin, log_t *log)
 
 void InitInfWindow(WINDOW *infWin)
 {
-	wborder(infWin, '|', '|', '-', '-', '+', '+', '+', '+');	
+	wborder(infWin, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, '+', '+', '+', '+');	
 	wrefresh(infWin);
 }
 
@@ -218,11 +221,11 @@ void PrintInf(WINDOW *infWin, player_t *player)
 {
 	int i;
 	mvwprintw(infWin, 1, 1, "%s", player->name);
-	mvwprintw(infWin, 2, 1, "Hp:%d(%d)", player->hP, PLAYER_HP);
-	mvwprintw(infWin, 3, 1, "Mp:%d(%d)", player->mP, PLAYER_MP);
+	mvwprintw(infWin, 2, 1, "Hp: %d/%d", player->hP, PLAYER_HP);
+	mvwprintw(infWin, 3, 1, "Mp: %d/%d", player->mP, PLAYER_MP);
 	mvwprintw(infWin, 5, 1, "Spells:");
-	for(i = 0; i < NUMBER_OF_SPELLS; i++)
-	{
-		mvwprintw(infWin, i+6, 1, "%s", player->spell[i].spellName);
-	}
+	// for(i = 0; i < NUMBER_OF_SPELLS; i++)
+	// {
+	// 	mvwprintw(infWin, i+6, 1, "%s", player->spell[i].spellName);
+	// }
 }

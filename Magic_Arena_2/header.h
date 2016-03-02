@@ -1,5 +1,3 @@
-void 			Copy(char *s1, char *s2);
-int 			Len(char *s);
 int 			ThrowDice(int dices, int edges);
 
 typedef enum {burning, healing, stuning, bleeding, none} effect_t;
@@ -11,18 +9,19 @@ typedef struct
 }camera_t;
 
 //Строка в логе(эл-т стека)
-typedef struct 
+typedef struct logString_t
 {
-	char					logString[LOG_WIN_WIDTH - 2]; //-2, что бы не вылезало на рамку окна 
-	struct logString_t		*next, *prev;
+	char				logString[LOG_WIN_WIDTH - 2]; //-2, что бы не вылезало на рамку окна 
+	struct logString_t	*next;
+	struct logString_t	*prev;
 }logString_t;
 //Сам лог(стек)
-typedef struct 
+typedef struct log_t
 {
 	struct logString_t		*head, *tail;
 }log_t;
 //Структура моба(эл-т списка мобов)
-typedef struct 
+typedef struct mob_t
 {
 	int 			x, y, hP, dmg, color, effects[NUMBER_OF_EFFECTS];
 	char 			symbol, name[30];
@@ -47,9 +46,10 @@ typedef struct
 //Структура объекта, используется на карте
 typedef struct 
 {
-	unsigned char 	symbol; 				//Дабы влезали "интересные" сивмолы
-	int 			color, isPassible; 
-	char 			desc[20];				//Описание объекта
+	int 			color, isPassable; 
+	unsigned char 	symbol;		//Беззнаковый дабы влезали "интересные" сивмолы		
+	char 			desc[20];	// Описание объекта	
+
 }object_t;
 //Структура игрока
 typedef struct 
@@ -61,28 +61,10 @@ typedef struct
 
 int ThrowDice(int dices, int edges)	
 {
-	int result = 0, i, j;
+	int result = 0, i;
 	for(i = 0; i < dices; i++)
 	{
-		result += rand() % edges;	
+		result += (rand() % edges) + 1;	//+1 что бы не было нуля
 	}
 	return result;
-}
-
-void Copy(char *s1, char *s2)		
-{
-	int i = Len(s1), j = 0;
-	while((s1[i] = s2[j]) != '\0')
-		i++, j++;
-
-}
-
-int Len(char *s)
-{
-	int len = 0,i;  
-	for(i = 0; s[i] != '\0'; i++) 
-	{
-		len++;
-	}
-	return len;
 }

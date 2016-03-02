@@ -24,7 +24,7 @@ void InitSpell(spell_t *spell, int dmg, int mCost, int color, char symbol, char 
 	spell -> eff 	 	=	effect;
 	spell -> timeOfEff 	=	timeOfEffect + ThrowDice(1, 3);
 	spell -> type 		=   type;
-	Copy(spell -> spellName, spellName);
+	strcat(spell -> spellName, spellName);
 }
 
 void ChooseSpells(player_t * player)

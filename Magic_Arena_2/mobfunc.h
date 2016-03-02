@@ -147,18 +147,18 @@ void GenerateInf(mob_t *mob)
 	{
 		case burning:
 		{
-			Copy(mob -> name, eff[0][ThrowDice(1, 3)]);
+			strcat(mob -> name, eff[0][ThrowDice(1, 3)]);
 			mob -> color = BURNING_COLOR;
 			break;
 		}
 		case stuning:
 		{
-			Copy(mob -> name, eff[1][ThrowDice(1, 3)]);
+			strcat(mob -> name, eff[1][ThrowDice(1, 3)]);
 			break;
 		}
 		case bleeding:
 		{
-			Copy(mob -> name, eff[2][ThrowDice(1, 3)]);
+			strcat(mob -> name, eff[2][ThrowDice(1, 3)]);
 			break;
 		}
 	}
@@ -171,7 +171,7 @@ void GenerateInf(mob_t *mob)
 	}	
 	else
 		symbol = ThrowDice(1, 4);
-	Copy(mob -> name, name[symbol]);		//Случайный выбор имени, затем на основе имени присваивание символа, урона, жизней, цвета
+	strcat(mob -> name, name[symbol]);		//Случайный выбор имени, затем на основе имени присваивание символа, урона, жизней, цвета
 	switch(symbol)
 	{
 		case 0:
@@ -207,21 +207,21 @@ void GenerateInf(mob_t *mob)
 				mob->hP  += TITLE_INCREASE_HP  + ThrowDice(2, 4);
 				if(((mob -> symbol != REVENANT_SYMBOL) && (mob -> symbol != DRAUGR_SYMBOL)) && (mob -> symbol != (char)DOOMBRINGER_SYMBOL))
 					mob -> symbol -= upperCase;
-				Copy(mob -> name, title[titleNum]);
+				strcat(mob -> name, title[titleNum]);
 			break;
 			case 1:			//Hunter title
 				mob->dmg += TITLE_INCREASE_DMG + ThrowDice(3, 4);
 				mob->hP -= ThrowDice(1, 4);
 				if(((mob -> symbol != REVENANT_SYMBOL) && (mob -> symbol != DRAUGR_SYMBOL)) && (mob -> symbol != (char)DOOMBRINGER_SYMBOL))
 					mob -> symbol -= upperCase;
-				Copy(mob -> name, title[titleNum]);
+				strcat(mob -> name, title[titleNum]);
 			break;
 			case 2:			//Berserk title
 				mob->dmg += TITLE_INCREASE_DMG + ThrowDice(3, 4);
 				mob->hP  += TITLE_INCREASE_HP  + ThrowDice(3, 4);
 				if(((mob -> symbol != REVENANT_SYMBOL) && (mob -> symbol != DRAUGR_SYMBOL)) && ((mob -> symbol) != (char)DOOMBRINGER_SYMBOL))
 					mob -> symbol -= upperCase;
-				Copy(mob -> name, title[titleNum]);
+				strcat(mob -> name, title[titleNum]);
 			break;
 		}
 	}

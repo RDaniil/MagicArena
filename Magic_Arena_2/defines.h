@@ -42,30 +42,32 @@
 #define LOG_WIN 			1
 #define INF_WIN 			2
 
-#define MAP_WIN_HEIGHT		20
-#define MAP_WIN_WIDTH 		20
+#define MAP_WIN_HEIGHT		30
+#define MAP_WIN_WIDTH 		50
 
-#define MAP_HEIGHT			50
-#define MAP_WIDTH 			50
+#define MAP_HEIGHT			100
+#define MAP_WIDTH 			100
 
 #define LOG_WIN_HEIGHT 		5
 #define LOG_WIN_WIDTH		MAP_WIN_WIDTH + INF_WIN_WIDTH
 
 #define INF_WIN_HEIGHT		MAP_WIN_HEIGHT
-#define INF_WIN_WIDTH 		15
+#define INF_WIN_WIDTH 		20
 
 #define SIMPLE_TEXT_COLOR	14
+#define RED_TEXT_COLOR 		18
 
 //-----------------Camera defines------------------
 #define CAMERA_HEIGHT		MAP_WIN_HEIGHT
 #define CAMERA_WIDTH		MAP_WIN_WIDTH
 
 //-----------------Objects defines------------------
-#define GROUND_SYMBOL				'.'
+#define GROUND_SYMBOL		'.'
 #define GROUND_COLOR 		14
 #define WALL_SYMBOL			177
 #define WALL_COLOR 			15
-
+#define PASSABLE			1
+#define IMPASSABLE			0
 
 //-----------------Mobs defines---------------------
 #define ZOMBIE_SYMBOL		'z'
@@ -109,3 +111,22 @@
 //-----------------Some defines---------------------
 #define ENTER_SMB			13
 #define ESCAPE_SMB			27
+
+//-----------------Color palette---------------------
+#define CLR_BLACK   		0
+#define CLR_BLUE			1
+#define CLR_LGHTBLUE		9
+#define CLR_GREEN			2
+#define CLR_LGHTGREEN		10
+#define CLR_CYAN			3
+#define CLR_LGHTCYAN		11
+#define CLR_RED				4
+#define CLR_LGHTRED			12
+#define CLR_VIOLET			5
+#define CLR_LGHTVIOLET		13
+#define CLR_YELLOW			6
+#define CLR_LGHTYELLOW		14
+#define CLR_WHITE			7 
+#define CLR_LGHTWHITE		15
+#define CLR_GRAY			8
+//-----------------Macrofunctions---------------------
